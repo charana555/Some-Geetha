@@ -2,7 +2,12 @@ import { SongCard, Loader, Error } from "../components";
 import { genres } from "../assets/constants.js";
 import { useGetTopChartsQuery } from "../redux/services/songApi";
 
+import { useDispatch, useSelector } from "react-redux";
+
 const Discover = () => {
+  const dispatch = useDispatch();
+  const { activeSong, isPlaying } = useSelector((state) => state.player);
+
   const { data, isFetching, error } = useGetTopChartsQuery();
   if (isFetching) return <Loader title={"Songs are Loading..."} />;
 
@@ -14,7 +19,7 @@ const Discover = () => {
         <select
           onChange={() => {}}
           value=""
-          className=" bg-black p-3 text-slate-400 text-sm rounded-lg outline-none mt-5 sm:mt-0 "
+          className=" bg-gray-800 p-3 text-slate-200 text-sm rounded-lg outline-none mt-5 sm:mt-0 "
         >
           {genres.map((genre) => (
             <option value={genre.value} key={genre.value}>
@@ -25,7 +30,14 @@ const Discover = () => {
       </div>
       <div className=" flex flex-wrap sm:justify-center justify-start gap-8">
         {data?.map((song, i) => (
-          <SongCard key={song.key} song={song} i={i} />
+          <SongCard
+            key={song.key}
+            song={song}
+            i={i}
+            activeSong={activeSong}
+            isPlaying={isPlaying}
+            data={data}
+          />
         ))}
       </div>
     </section>
